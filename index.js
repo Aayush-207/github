@@ -4,24 +4,48 @@ import simpleGit from "simple-git";
 
 const path = "./data.json";
 
+// CONFIG: Add as many dates as you want
+const commitSchedule = [
+  { date: "2026-05-06", commits: 6 },
+  { date: "2026-05-14", commits: 8 },
+  { date: "2026-05-20", commits: 3 },
+  { date: "2026-05-26", commits: 3 },
+  { date: "2026-05-27", commits: 3 },
+];
 
-// CONFIG: set your target date (YYYY-MM-DD) and number of commits
-const TARGET_DATE = "2026-06-20";
-const NUM_COMMITS = 6;
+const git = simpleGit();
 
-const makeCommitsOnDate = (n) => {
-  if (n === 0) return simpleGit().push();
+const makeCommitsForDate = async (date, count) => {
+  for (let i = 1; i <= count; i++) {
+    const commitDate = moment(date)
+      .hour(10 + Math.floor(Math.random() * 8)) // Random hour (10 AM - 5 PM)
+      .minute(Math.floor(Math.random() * 60))
+      .second(Math.floor(Math.random() * 60))
+      .format();
 
-  const date = moment(TARGET_DATE).format();
-  const data = { date };
+    const data = {
+      date: commitDate,
+      commit: i,
+    };
 
-  console.log(`Making commit ${NUM_COMMITS - n + 1}/${NUM_COMMITS} on ${date}`);
+    console.log(`Commit ${i}/${count} on ${commitDate}`);
 
-  jsonfile.writeFile(path, data, () => {
-    simpleGit()
-      .add([path])
-      .commit(date, { "--date": date }, makeCommitsOnDate.bind(this, --n));
-  });
+    await jsonfile.writeFile(path, data);
+
+    await git.add([path]);
+    await git.commit(`Commit ${i} on ${date}`, {
+      "--date": commitDate,
+    });
+  }
 };
 
-makeCommitsOnDate(NUM_COMMITS);
+const run = async () => {
+  for (const { date, commits } of commitSchedule) {
+    await makeCommitsForDate(date, commits);
+  }
+
+  await git.push();
+  console.log("✅ All commits created and pushed!");
+};
+
+run().catch(console.error);
