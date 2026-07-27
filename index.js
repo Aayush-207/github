@@ -6,7 +6,7 @@ const path = "./data.json";
 
 
 // CONFIG: set your target date (YYYY-MM-DD) and number of commits
-const TARGET_DATE = "2026-07-26";
+const TARGET_DATE = "2026-06-20";
 const NUM_COMMITS = 6;
 
 const makeCommitsOnDate = (n) => {
