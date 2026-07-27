@@ -4,9 +4,10 @@ import simpleGit from "simple-git";
 
 const path = "./data.json";
 
+
 // CONFIG: set your target date (YYYY-MM-DD) and number of commits
-const TARGET_DATE = "2024-01-15";
-const NUM_COMMITS = 5;
+const TARGET_DATE = "2026-07-26";
+const NUM_COMMITS = 6;
 
 const makeCommitsOnDate = (n) => {
   if (n === 0) return simpleGit().push();
